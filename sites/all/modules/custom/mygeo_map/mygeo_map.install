@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Install/Update/Uninstall functions for geolocation_field module
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function mygeo_map_field_schema($field) {
+  $columns = array(
+    'division1' => array(
+      'description' => 'Stores first division value of address',
+      'type' => 'varchar',
+      'length'=>255,
+      'not null' => FALSE,
+      'default' => 0,
+    ),
+    'division2' => array(
+      'description' => 'Stores second division value of address',
+      'type' => 'varchar',
+      'length'=>255,
+      'not null' => FALSE,
+      'default' => 0,
+    ),
+    'division3' => array(
+      'description' => 'Stores third division value of address',
+      'type' => 'varchar',
+      'length'=>255,
+      'not null' => FALSE,
+      'default' => 0,
+    ),
+    'division4' => array(
+      'description' => 'Stores fourth division value of address',
+      'type' => 'varchar',
+      'length'=>255,
+      'not null' => FALSE,
+      'default' => 0,
+    ),
+    'additional' => array(
+      'description' => 'Stores the additional address',
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length'=>255,
+      'default' => 0,
+    ),
+  );
+  return array(
+    'columns' => $columns,
+  );
+}

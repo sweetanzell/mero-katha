@@ -1,0 +1,15 @@
+#mygeomap-address-wrapper{
+	height:400px;
+	width:320px;
+	float:left;
+}
+#google-map{
+	float:left;
+}
+#ajax-gif-loader{
+	width:15px;
+	height:15px;
+	background-image: url('throbber.gif');
+	background-position:0px 20px;
+	display: inline-block;
+}

@@ -1,0 +1,191 @@
+<?php
+/*
+ * implements hook_field_widget_info()
+ */
+ function mygeo_map_field_widget_info(){
+ 	return array(
+        'mygeomap_latlng'=> array(
+            'label'=> t('My geo Latitude/Longitude'),
+            'field types'=> array('geolocation_latlng'),
+            ),
+        'mygeomap_address'=>array(
+            'label'=>t('My geo address'),
+            'field types'=>array('mygeomap_address'),
+            ),
+        );
+ }
+ /*
+  * implements hook_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element)
+  */
+ function mygeo_map_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element){
+    $element += array(
+            '#delta' => $delta,
+            
+        );
+    if ($field['cardinality'] == 1) {
+      $element['#type'] = 'fieldset';
+    }
+
+    switch($instance['widget']['type']){
+
+        case 'mygeomap_address': 
+
+        $division1_value = isset($items[$delta]['division1']) ? $items[$delta]['division1'] : NULL;
+        $division2_value = isset($items[$delta]['division2']) ? $items[$delta]['division2'] : NULL;
+        $division3_value = isset($items[$delta]['division3']) ? $items[$delta]['division3'] : NULL;
+        $division4_value = isset($items[$delta]['division4']) ? $items[$delta]['division4'] : NULL;
+        $additional_value = isset($items[$delta]['additional']) ? $items[$delta]['additional'] : NULL;
+            
+                $element['#attached']=array(
+                'css'=>array(
+                    'data'=>drupal_get_path('module', 'mygeo_map') . '/mygeo.css',
+                    ),
+                'js'=>array(
+                        0=>array(
+                          'data'=>'https://maps.googleapis.com/maps/api/js?key=AIzaSyBxOMV78ftnWWH_lFR0xnVEKvMqI7cp4ks&sensor=false',
+                        ),
+                        1=> array(
+                          'data' => drupal_get_path('module', 'mygeo_map') . '/mygeomap_widget.js',
+                        ),
+ 
+                    ),
+                ); 
+                $element['#prefix']='<div id="mygeomap-form">';
+                $element['#suffix']='</div>';
+                $element['division1']=array(
+                    '#type' => 'textfield',
+                    '#title' => t('division1'),
+                    '#default_value'=>$division1_value,
+                    '#prefix'=>"<div id='mygeomap-address-wrapper'><div class='mygeomap-address-division' id='mygeomap-address-division1'>",
+                    '#suffix'=>"</div>",
+                    );
+                $element['division2']=array(
+                    '#type' => 'textfield',
+                    '#title' => t('division2'),
+                    '#default_value'=>$division2_value,
+                    '#prefix'=>"<div class='mygeomap-address-division' id='mygeomap-address-division2'>",
+                    '#suffix'=>"</div>",
+                    );
+                $element['division3']=array(
+                    '#type' => 'textfield',
+                    '#title' => t('division3'),
+                    '#default_value'=>$division3_value,
+                    '#prefix'=>"<div class='mygeomap-address-division' id='mygeomap-address-division3'>",
+                    '#suffix'=>"</div>",
+                    );
+                $element['division4']=array(
+                    '#type' => 'textfield',
+                    '#title' => t('division4'),
+                    '#default_value'=>$division4_value,
+                    '#prefix'=>"<div class='mygeomap-address-division' id='mygeomap-address-division4'>",
+                    '#suffix'=>"</div>",
+                    );
+                 $element['additional']=array(
+                     '#type'=>'textfield',
+                     '#title' => t('Additional address'), 
+                     '#size' => 35, 
+                     '#maxlength' => 128,
+                     '#default_value'=>$additional_value,
+                     '#prefix'=>"<div id='mygeomap-address-additional'>",
+                    '#suffix'=>"</div>", 
+                 );
+                 $element['getLocation']=array(
+                    '#type'=>'submit',
+                    '#value'=>t('Get Location'),
+                    '#prefix'=>"<div id='mygeomap-address-getlocation'>",
+                    '#suffix'=>"</div></div>",
+                    );
+            $element['googlemap'] = array(
+                '#prefix' => '<div id="google-map" class="google-map-cls" style="width:650px;height:400px;">',
+                '#suffix' => '</div>',
+            );             
+        break;
+
+        case 'mygeomap_latlng':
+
+        $lat_value = isset($items[$delta]['lat']) ? $items[$delta]['lat'] : NULL;
+        $lng_value = isset($items[$delta]['lng']) ? $items[$delta]['lng'] : NULL;
+    
+           $element['lat']=array(
+                '#type'=>'textfield',
+                '#title' => t('Latitude'), 
+                '#size' => 60, 
+                '#maxlength' => 128,
+                '#required' => $instance['required'],
+                '#default_value'=>$lat_value,
+                '#prefix'=>"<div id='mygeomap-location-lat'>",
+                '#suffix'=>"</div>",
+                );
+                $element['lng']=array(
+                  '#type'=>'textfield',
+                  '#title' => t('Longitude'), 
+                  '#size' => 60, 
+                  '#maxlength' => 128,
+                  '#required' => $instance['required'],
+                  '#default_value'=>$lng_value,
+                  '#prefix'=>"<div id='mygeomap-location-lng'>",
+                  '#suffix'=>"</div>",
+                );  
+        
+        break;
+    }
+    return $element;
+}
+/*
+ * implements hook_field_info()
+ */
+function mygeo_map_field_info() {
+  return array(
+    'mygeomap_address' => array(
+      'label' => t('Mygeo Address'),
+      'description' => t('Myaddress'),
+      'default_widget' => 'mygeomap_address',
+      'default_formatter' => 'mygeomap_text',
+    ),
+  );
+}
+/**
+ * Implements hook_field_formatter_info().
+ */
+function mygeo_map_field_formatter_info() {
+  return array(
+    'mygeomap_text' => array(
+      'label' => t('Simple text-based address formatter'),
+      'field types' => array('mygeomap_address'),
+    ),
+  );
+}
+/*
+ * Implements hook_field_formatter_view().
+ */
+function mygeo_map_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  switch ($display['type']) {
+
+    case 'mygeomap_text':
+      foreach ($items as $delta => $item) {
+        $item=array_reverse($item);
+        $address='';
+        foreach($item as $key=>$value)
+        {
+          if($value)
+          {
+            if($address)
+            {
+              $address.=', ';
+            }
+            $address.=$value;
+          }
+        }
+        $element[$delta]['#markup'] = $address;
+      }
+      break;
+  }
+  return $element;
+}
+function mygeo_map_field_is_empty($item, $field) {
+  if (empty($item['division1']) && (string) $item['division1'] !== '0' && empty($item['division2']) && (string) $item['division2'] !== '0' && empty($item['division3']) && (string) $item['division3'] !== '0' && empty($item['division4']) && (string) $item['division4'] !== '0' && empty($item['additional']) && (string) $item['additional'] !== '0') {
+    return TRUE;
+  }
+    return FALSE;
+}
