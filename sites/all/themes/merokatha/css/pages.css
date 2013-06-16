@@ -22,7 +22,6 @@ body {
 
 #page {
   max-width: 100%;
-  background: #fff;
 }
 
 /*
@@ -46,12 +45,16 @@ body {
 /*
  * Header
  */
+#header {
+  position: relative;
+  width: 960px;
+  margin: 0 auto;
+}
 
 .not-front #header {
-  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
   background: #eee;
   overflow: hidden;
-  margin-bottom: 10px;
+
 }
 
 #logo { /* Wrapping link for logo */
@@ -90,6 +93,9 @@ body {
 
 .region-header { /* Wrapper for any blocks placed in the header region */
   clear: both; /* Clear the logo */
+  position: absolute;
+  top: -4px;
+  right: 0;
 }
 
 /*
@@ -372,11 +378,51 @@ span.field-label { /* The inline field label used by the Fences module */
   padding-bottom: 80px;
 }
 
+article.node-stories .field-name-field-police-station,
 article.node-stories .field-name-field-police-station-date,
+article.node-stories .field-name-field-lawer-office,
 article.node-stories .field-name-field-lawer-office-date,
+article.node-stories .field-name-field-court,
 article.node-stories .field-name-field-court-date,
 article.node-stories .field-name-field-incident-date,
-article.node-stories .field-name-field-country {
+article.node-stories .field-name-field-country,
+article.node-stories .field-name-field-address {
   float: left;
   margin-right: 80px;
+  margin-bottom: 10px;
+  width: 240px;
+}
+
+a.view-all-stories-link {
+  background: url(../images/view-story.png) no-repeat 0 0;
+  text-align: center;
+  display: block;
+  width: 386px;
+  height: 65px;
+  text-indent: -9999px;
+  margin: 0 auto 60px;
+}
+
+a.view-all-stories-link:hover {
+   background: url(../images/view-story-hover.png) no-repeat 0 0;
+}
+
+.login-register-block {
+  background: #ff530d;
+  padding: 8px 64px 8px 64px;
+  float: left;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  color: #fff;
+}
+
+.login-register-block p {
+  margin: 0;
+}
+
+.login-register-block a {
+  font-size: 16px;
+  color: #fff;
+  text-decoration: none;
 }
